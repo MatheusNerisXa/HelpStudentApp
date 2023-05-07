@@ -7,10 +7,15 @@ import { logar } from '../../service/requisicoesFirebase';
 import estilos from './estilos';
 import loading  from '../../../assets/loading.gif'
 import { auth } from '../../config/firebase';
+import { alteraDados } from '../../utils/comum';
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  
+  const [dados, setDados] = useState({
+    email: '',
+    senha: ''
+  })
+
   const [statusError, setStatusError] = useState('');
   const [mensagemError, setMensagemError] = useState('');
   const [carregando, setCarregando] = useState(true);
@@ -27,14 +32,14 @@ export default function Login({ navigation }) {
   }, [])
 
   async function realizarLogin(){
-    if(email == ''){
+    if(dados.email == ''){
       setMensagemError('O campo e-mail é obrigatório!');
       setStatusError('email');
-    } else if (senha == ''){
+    } else if (dados.senha == ''){
       setMensagemError('O campo senha é obrigatório!');
       setStatusError('senha');
     } else {
-      const resultado = await logar(email,senha);
+      const resultado = await logar(dados.email,dados.senha);
       if(resultado == 'erro'){
         setStatusError('firebase')
         setMensagemError('Email ou senha inválidos!')
@@ -59,15 +64,15 @@ export default function Login({ navigation }) {
     <View style={estilos.container}>
       <EntradaTexto 
         label="E-mail"
-        value={email}
-        onChangeText={texto => setEmail(texto)}
+        value={dados.email}
+        onChangeText={valor => alteraDados('email', valor, dados, setDados)}
         error={statusError == 'email'}
         messageError={mensagemError}
       />
       <EntradaTexto
         label="Senha"
-        value={senha}
-        onChangeText={texto => setSenha(texto)}
+        value={dados.senha}
+        onChangeText={valor => alteraDados('senha', valor, dados, setDados)}
         secureTextEntry
         error={statusError == 'senha'}
         messageError={mensagemError}

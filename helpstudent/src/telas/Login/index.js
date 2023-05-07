@@ -33,23 +33,28 @@ export default function Login({ navigation }) {
     return () => estadoUsuario();
   }, [])
 
-  async function realizarLogin(){
-    if(dados.email == ''){
-      setMensagemError('O campo e-mail é obrigatório!');
-      setStatusError('email');
-    } else if (dados.senha == ''){
-      setMensagemError('O campo senha é obrigatório!');
-      setStatusError('senha');
-    } else {
-      const resultado = await logar(dados.email,dados.senha);
-      if(resultado == 'erro'){
-        setStatusError('firebase')
-        setMensagemError('Email ou senha inválidos!')
-      }
-      else {
-        navigation.replace('Principal')
+  function verificaEntradaVazia(){
+    for(const [variavel, valor] of  Object.entries(dados)){
+      if(valor == '') {
+        setDados({
+          ...dados,
+          [variavel]: null
+        })
+        return true
       }
     }
+    return false
+  }
+
+  async function realizarLogin(){
+    if(verificaEntradaVazia()) return
+    const resultado = await logar(dados.email,dados.senha)
+    if(resultado == 'erro'){
+      setStatusError(true)
+      setMensagemError('E-mail ou senha inválidos')
+      return
+    }
+    navigation.replace('Principal')
   }
 
   if(carregando){
@@ -79,7 +84,7 @@ export default function Login({ navigation }) {
       
       <Alerta
         mensagem={mensagemError}
-        error={statusError == 'firebase'}
+        error={statusError}
         setError={setStatusError}
       />
 

@@ -7,6 +7,7 @@ import { logar } from '../../service/requisicoesFirebase';
 import estilos from './estilos';
 import loading  from '../../../assets/loading.gif'
 import { auth } from '../../config/firebase';
+import { entradas } from './entradas';
 import { alteraDados } from '../../utils/comum';
 
 export default function Login({ navigation }) {
@@ -19,6 +20,7 @@ export default function Login({ navigation }) {
   const [statusError, setStatusError] = useState('');
   const [mensagemError, setMensagemError] = useState('');
   const [carregando, setCarregando] = useState(true);
+
 
   useEffect(() => {
     const estadoUsuario = auth.onAuthStateChanged(
@@ -62,21 +64,18 @@ export default function Login({ navigation }) {
 
   return (
     <View style={estilos.container}>
-      <EntradaTexto 
-        label="E-mail"
-        value={dados.email}
-        onChangeText={valor => alteraDados('email', valor, dados, setDados)}
-        error={statusError == 'email'}
-        messageError={mensagemError}
-      />
-      <EntradaTexto
-        label="Senha"
-        value={dados.senha}
-        onChangeText={valor => alteraDados('senha', valor, dados, setDados)}
-        secureTextEntry
-        error={statusError == 'senha'}
-        messageError={mensagemError}
-      />
+     {
+      entradas.map((entrada) => {
+        return (
+          <EntradaTexto
+            key={entrada.id}
+            {...entrada}
+            value={dados[entrada.name]}
+            onChangeText={valor => alteraDados(entrada.name,valor,dados,setDados)}
+            />
+          )
+      })
+     }
       
       <Alerta
         mensagem={mensagemError}

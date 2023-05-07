@@ -7,5 +7,14 @@ export default StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: 25,
     paddingHorizontal: 20,
+  },
+  containerLoading:{
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  imagem:{
+    width: 200,
+    height: 200
   }
 });

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import Botao from '../../componentes/Botao';
 import { Alerta } from '../../componentes/Alerta';
 import { EntradaTexto } from '../../componentes/EntradaTexto';
 import { logar } from '../../service/requisicoesFirebase';
 import estilos from './estilos';
+import loading  from '../../../assets/loading.gif'
 import { auth } from '../../config/firebase';
 
 export default function Login({ navigation }) {
@@ -12,6 +13,7 @@ export default function Login({ navigation }) {
   const [senha, setSenha] = useState('');
   const [statusError, setStatusError] = useState('');
   const [mensagemError, setMensagemError] = useState('');
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     const estadoUsuario = auth.onAuthStateChanged(
@@ -19,8 +21,8 @@ export default function Login({ navigation }) {
         if(usuario){
           navigation.replace('Principal')
         }
+        setCarregando(false)
     })
-
     return () => estadoUsuario();
   }, [])
 
@@ -41,6 +43,16 @@ export default function Login({ navigation }) {
         navigation.replace('Principal')
       }
     }
+  }
+
+  if(carregando){
+     return (
+      <View style={estilos.containerLoading}>
+          <Image source={loading}
+           style={estilos.imagem}
+          />
+      </View>
+     )
   }
 
   return (

@@ -8,7 +8,7 @@ import estilos from './estilos';
 import loading  from '../../../assets/loading.gif'
 import { auth } from '../../config/firebase';
 import { entradas } from './entradas';
-import { alteraDados } from '../../utils/comum';
+import { alteraDados, verificaEntradaVazia} from '../../utils/comum';
 
 export default function Login({ navigation }) {
   
@@ -33,21 +33,10 @@ export default function Login({ navigation }) {
     return () => estadoUsuario();
   }, [])
 
-  function verificaEntradaVazia(){
-    for(const [variavel, valor] of  Object.entries(dados)){
-      if(valor == '') {
-        setDados({
-          ...dados,
-          [variavel]: null
-        })
-        return true
-      }
-    }
-    return false
-  }
 
   async function realizarLogin(){
-    if(verificaEntradaVazia()) return
+    if(verificaEntradaVazia(dados, setDados)) 
+    return
     const resultado = await logar(dados.email,dados.senha)
     if(resultado == 'erro'){
       setStatusError(true)

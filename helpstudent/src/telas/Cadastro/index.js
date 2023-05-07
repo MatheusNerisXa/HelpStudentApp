@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, View } from 'react-native';
 import Botao from '../../componentes/Botao';
 import { EntradaTexto } from '../../componentes/EntradaTexto';
 import estilos from './estilos';
 import { cadastrar } from '../../service/requisicoesFirebase';
+import { Alerta } from '../../componentes/Alerta';
 
 export default function Cadastro({ navigation }) {  
   const [email, setEmail] = useState('');
@@ -27,16 +28,15 @@ export default function Cadastro({ navigation }) {
       setStatusError('confirmaSenha');
     } else{
      const resultado =  await cadastrar(email,senha);
+     setStatusError('firebase')
      if(resultado == 'sucesso'){
-      Alert.alert('Usuário cadastro com sucesso!');
+      setMensagemError('Usuário cadastrado com sucesso!')
       setEmail('')
       setSenha('')
       setConfirmaSenha('')
      } else {
-      Alert.alert(resultado);
+      setMensagemError(resultado)
      }
-     setStatusError('')
-     setMensagemError('')
     }
   }
 
@@ -66,7 +66,13 @@ export default function Cadastro({ navigation }) {
         error={statusError == 'confirmaSenha'}
         messageError={mensagemError}
       />
-      
+
+      <Alerta
+        mensagem={mensagemError}
+        error={statusError == 'firebase'}
+        setError={setStatusError}
+      />
+
       <Botao onPress={() => realizaCadastro()}>CADASTRAR</Botao>
     </View>
   );

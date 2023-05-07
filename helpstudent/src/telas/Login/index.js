@@ -26,7 +26,7 @@ export default function Login({ navigation }) {
         setMensagemError('Email ou senha inválidos!')
       }
       else {
-        navigation.navigate('Principal')
+        navigation.replace('Principal')
       }
     }
   }
